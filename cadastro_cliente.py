@@ -2,16 +2,42 @@ import lib
 import uuid
 import connection_factory as cf
 
+def localiza_cliente():
+    lib.limpar_tela()
+    
+    try:
+        cf.cursor.execute('''SELECT * FROM clientes''')
+    except:
+        print("Ocorreu algum erro relacionado ao banco de dados...")
+    else:
+        clientes = cf.cursor.fetchall()
+        print('-' * 70)
+        for cliente in clientes:
+            print('ÍNDICE: {} \nID: {} \nNOME: {} \nTELEFONE: {} \nE-MAIL: {}'.format(*cliente))
+            print('-' * 70)
+    
+    indice = input("Digite o indice de qual cliente você deseja selecionar: \n")
+    indice = int(indice)
+
+    try:
+        cf.cursor.execute('''SELECT id FROM clientes WHERE indice = ?''', indice)
+    except:
+        print("Ocorreu algum erro relacionado ao banco de dados...")
+    else:
+        id = cf.cursor.fetchone()
+        
+    return id
+
+
 def listar():
     lib.limpar_tela();
     
     try:
         cf.cursor.execute('''SELECT * FROM clientes''')
     except:
-        print("Erro de conexão com o banco de dados...")
+        print("Ocorreu algum erro relacionado ao banco de dados...")
     else:
         clientes = cf.cursor.fetchall()
-
         print('-' * 70)
         for cliente in clientes:
             print('ID: {} \nNOME: {} \nTELEFONE: {} \nE-MAIL: {}'.format(*cliente))
@@ -39,10 +65,10 @@ def cadastrar():
             VALUES (?, ?, ?, ?);
         ''', (cliente["id"], cliente["nome"], cliente["telefone"], cliente["email"]))
     except:
-        print("Erro de conexão com o banco de dados...")
+        print("Ocorreu algum erro relacionado ao banco de dados...")
     else:
         cf.cursor.commit()
-
-    print("-" * 100)
-    lib.mensagem("Cliente cadastrado com sucesso!")
-    print("-" * 100)
+        print("-" * 100)
+        lib.mensagem("Cliente cadastrado com sucesso!")
+        print("-" * 100)
+    

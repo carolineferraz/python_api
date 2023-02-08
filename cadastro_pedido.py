@@ -1,9 +1,7 @@
 import lib
-import csv_sistema
 import cadastro_cliente
 import uuid
-
-nome_do_arquivo = "pedidos.csv"
+import connection_factory as cf
 
 def listar():
     lib.limpar_tela();
@@ -22,19 +20,25 @@ def listar():
     lib.limpar_tela()
     
 def cadastrar():
+    
     lib.limpar_tela()
-
-    cliente = cadastro_cliente.localiza_cliente()
-
     pedido = {}
+
     pedido["id"] = str(uuid.uuid4())
-    pedido["cliente_id"] = cliente["id"]
+    pedido["cliente_id"] = cadastro_cliente.localiza_cliente()
     pedido["produto"] = input("Digite o nome do produto: ")
     pedido["quantidade"] = input("Digite a quantidade: ")
     pedido["valor"] = input("Digite o valor: ")
     pedido["valor_total"] = float(pedido["quantidade"]) * float(pedido["valor"])
 
-    lista = csv_sistema.ler(nome_do_arquivo)
-    lista.append(pedido)
-    csv_sistema.salvar(lista, nome_do_arquivo)
+    cf.cursor.execute('''
+        INSERT INTO pedidos (id, cliente_id, produto, quantidade, valor)
+        VALUES (?, ?, ?, ?, ?);
+    ''', (pedido["id"], str(pedido["cliente_id"]), pedido["produto"], pedido["quantidade"], pedido["valor"]))
+
+    print("Ocorreu algum erro relacionado ao banco de dados...")
+
+    cf.cursor.commit()
+    print("-" * 100)
     lib.mensagem("Pedido cadastrado com sucesso!")
+    print("-" * 100)
