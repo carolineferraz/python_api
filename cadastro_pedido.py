@@ -5,18 +5,19 @@ import connection_factory as cf
 
 def listar():
     lib.limpar_tela();
-    lista = csv_sistema.ler(nome_do_arquivo)
-    print("-" * 60)
-    for item in lista:
-        print("Id: " + item["id"])
-        cliente = csv_sistema.busca_por_id(item["cliente_id"], "clientes.csv")
-        print("Cliente: " + cliente["nome"])
-        print("Quantidade: " + item["quantidade"])
-        print("Valor da unidade: R$" + item["valor"])
-        print("Valor Total: R$" + item["valor_total"])
-        print("-" * 60)
+    
+    try:
+        cf.cursor.execute('''SELECT * FROM pedidos''')
+    except:
+        print("Ocorreu algum erro relacionado ao banco de dados...")
+    else:
+        pedidos = cf.cursor.fetchall()
+        print('-' * 70)
+        for pedido in pedidos:
+            print('ID: {} \nCLIENTE_ID: {} \nPRODUTO: {} \nQUANTIDADE: {} \nVALOR: {} \nVALOR TOTAL: {}'.format(*pedido))
+            print('-' * 70)
 
-    input("Digite enter para continuar ...")
+    input("\nDigite 'Enter' para continuar ...")
     lib.limpar_tela()
     
 def cadastrar():
@@ -32,9 +33,9 @@ def cadastrar():
     pedido["valor_total"] = float(pedido["quantidade"]) * float(pedido["valor"])
 
     cf.cursor.execute('''
-        INSERT INTO pedidos (id, cliente_id, produto, quantidade, valor)
-        VALUES (?, ?, ?, ?, ?);
-    ''', (pedido["id"], str(pedido["cliente_id"]), pedido["produto"], pedido["quantidade"], pedido["valor"]))
+        INSERT INTO pedidos (id, cliente_id, produto, quantidade, valor, valor_total)
+        VALUES (?, ?, ?, ?, ?, ?);
+    ''', (pedido["id"], str(pedido["cliente_id"]), pedido["produto"], pedido["quantidade"], pedido["valor"], str(pedido["valor_total"])))
 
     print("Ocorreu algum erro relacionado ao banco de dados...")
 

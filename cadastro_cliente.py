@@ -30,7 +30,7 @@ def localiza_cliente():
 
 
 def listar():
-    lib.limpar_tela();
+    lib.limpar_tela()
     
     try:
         cf.cursor.execute('''SELECT * FROM clientes''')
@@ -46,17 +46,15 @@ def listar():
     input("\nDigite 'Enter' para continuar ...")
     lib.limpar_tela()
     
+    
 def cadastrar():
     
     lib.limpar_tela()
     cliente = {}
 
     cliente["id"] = str(uuid.uuid4())
-
     cliente["nome"] = input("Digite o nome do cliente: ")
-
     cliente["telefone"] = input("Digite o telefone do cliente: ")
-
     cliente["email"] = input("Digite o email do cliente: ")
 
     try:
