@@ -27,16 +27,20 @@ def localiza_cliente():
 
 def listar():
     lib.limpar_tela();
-    lista = csv_sistema.ler(nome_do_arquivo)
-    print("-" * 60)
-    for item in lista:
-        print("Id: " + item["id"])
-        print("Nome: " + item["nome"])
-        print("Telefone: " + item["telefone"])
-        print("Email: " + item["email"])
-        print("-" * 60)
+    
+    try:
+        cf.cursor.execute('''SELECT * FROM clientes''')
+    except:
+        print("Erro de conexão com o banco de dados...")
+    else:
+        clientes = cf.cursor.fetchall()
 
-    input("Digite 'Enter' para continuar ...")
+        print('-' * 70)
+        for cliente in clientes:
+            print('ID: {} \nNOME: {} \nTELEFONE: {} \nE-MAIL: {}'.format(*cliente))
+            print('-' * 70)
+
+    input("\nDigite 'Enter' para continuar ...")
     lib.limpar_tela()
     
 def cadastrar():
@@ -52,12 +56,16 @@ def cadastrar():
 
     cliente["email"] = input("Digite o email do cliente: ")
 
-    cf.cursor.execute('''
-        INSERT INTO clientes (id, nome, telefone, email)
-        VALUES (?, ?, ?, ?);
-    ''', (cliente["id"], cliente["nome"], cliente["telefone"], cliente["email"]))
+    try:
+        cf.cursor.execute('''
+            INSERT INTO clientes (id, nome, telefone, email)
+            VALUES (?, ?, ?, ?);
+        ''', (cliente["id"], cliente["nome"], cliente["telefone"], cliente["email"]))
+    except:
+        print("Erro de conexão com o banco de dados...")
+    else:
+        cf.cursor.commit()
 
-    cf.cursor.commit()
     print("-" * 100)
     lib.mensagem("Cliente cadastrado com sucesso!")
     print("-" * 100)

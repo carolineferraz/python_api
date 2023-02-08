@@ -7,4 +7,3 @@ conn = pyodbc.connect(
 )
 
 cursor = conn.cursor()
-

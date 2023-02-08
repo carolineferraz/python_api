@@ -9,7 +9,7 @@ print("-" * 100)
 while(True):
     print("Selecione uma das opções abaixo:")
     print("1 - Cadastro de clientes")
-    print("2 - Lista clientes")
+    print("2 - Lista de clientes")
     print("3 - Cadastro de pedidos")
     print("4 - Lista de pedidos")
     print("5 - Sair")
