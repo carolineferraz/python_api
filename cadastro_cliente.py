@@ -1,29 +1,6 @@
 import lib
-import csv_sistema
 import uuid
 import connection_factory as cf
-
-nome_do_arquivo = "clientes.csv"
-
-def localiza_cliente():
-    lib.limpar_tela()
-    lista = csv_sistema.ler(nome_do_arquivo)
-    print("-" * 60)
-    for idx, item in enumerate(lista):
-        print("Indice: " + str(idx + 1))
-        print("Nome: " + item["nome"])
-        print("Telefone: " + item["telefone"])
-        print("Email: " + item["email"])
-        print("-" * 60)
-    
-    indice = input("Digite o indice de qual cliente você deseja selecionar: \n")
-    cliente = lista[int(indice) - 1]
-    if cliente == None:
-        lib.mensagem("opção inválida")
-        localiza_cliente()
-
-    return cliente
-
 
 def listar():
     lib.limpar_tela();
